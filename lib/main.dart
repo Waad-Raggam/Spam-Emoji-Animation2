@@ -1,111 +1,106 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animation_sample_1/emoji_animation.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: Text('Spam Button Icon')),
-        body: Center(
-          child: SpamButtonIcon(),
-        ),
-      ),
+      home: EmojiAnimationScreen(),
     );
   }
 }
 
-class SpamButtonIcon extends StatefulWidget {
-  @override
-  _SpamButtonIconState createState() => _SpamButtonIconState();
-}
+// class ExplosionScreen extends StatefulWidget {
+//   @override
+//   _ExplosionScreenState createState() => _ExplosionScreenState();
+// }
 
-class _SpamButtonIconState extends State<SpamButtonIcon>
-    with TickerProviderStateMixin {
-  late AnimationController _animationController;
-  bool _isAnimating = false;
-  Alignment _currentAlignment = Alignment.center;
+// class _ExplosionScreenState extends State<ExplosionScreen>
+//     with SingleTickerProviderStateMixin {
+//   late AnimationController _controller;
+//   late Animation<double> _animation;
 
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 200),
-    )..addListener(() {
-        setState(() {});
-      });
-  }
+//   List<Widget> _explosionParticles = [];
 
-  void _startAnimation() {
-    _animationController.repeat(reverse: true);
-    setState(() {
-      _isAnimating = true;
-    });
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     _controller = AnimationController(
+//       vsync: this,
+//       duration: Duration(seconds: 2),
+//     )..forward();
 
-  void _stopAnimation() {
-    _animationController.stop();
-    setState(() {
-      _isAnimating = false;
-      _currentAlignment =
-          Alignment.center; // Reset the position when animation stops
-    });
-  }
+//     _animation = CurvedAnimation(
+//       parent: _controller,
+//       curve: Curves.easeInOut,
+//     );
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => _startAnimation(),
-      onTapUp: (_) => _stopAnimation(),
-      onTapCancel: () => _stopAnimation(),
-      child: AnimatedBuilder(
-        animation: _animationController,
-        builder: (context, child) {
-          if (_isAnimating) {
-            // Interpolate the position of the icon between the center and the top of the screen.
-            double animationValue = _animationController.value;
-            double startX = 0.0;
-            double startY = 0.0;
-            double endX = 0.0;
-            double endY = -1.0;
+//     _controller.addStatusListener((status) {
+//       if (status == AnimationStatus.completed) {
+//         setState(() {
+//           _explosionParticles.clear();
+//         });
+//       }
+//     });
+//   }
 
-            double interpolatedX = startX + (endX - startX) * animationValue;
-            double interpolatedY = startY + (endY - startY) * animationValue;
+//   @override
+//   void dispose() {
+//     _controller.dispose();
+//     super.dispose();
+//   }
 
-            _currentAlignment = Alignment(interpolatedX, interpolatedY);
-          }
-          return Stack(
-            children: [
-              Align(
-                alignment: _currentAlignment,
-                child: Icon(
-                  Icons.face,
-                  size: 50.0,
-                  color: Colors.yellow,
-                ),
-              ),
-              Align(
-                alignment: _currentAlignment,
-                child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: Icon(
-                      Icons.face,
-                      size: 50,
-                      color: Colors.green,
-                    )),
-              )
-            ],
-          );
-        },
-      ),
-    );
-  }
+//   void _addExplosionParticle() {
+//     final random = Random();
+//     final particleSize = random.nextDouble() * 40 + 10;
+//     final particle = Positioned(
+//       left: random.nextDouble() * MediaQuery.of(context).size.width,
+//       top: random.nextDouble() * MediaQuery.of(context).size.height,
+//       child: Container(
+//         width: particleSize,
+//         height: particleSize,
+//         decoration: BoxDecoration(
+//           color: Colors.blue,
+//           shape: BoxShape.circle,
+//         ),
+//       ),
+//     );
+//     setState(() {
+//       _explosionParticles.add(particle);
+//     });
+//   }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Colors.black,
+//       body: GestureDetector(
+//         onTap: () {
+//           _addExplosionParticle();
+//         },
+//         child: Stack(
+//           children: [
+//             AnimatedBuilder(
+//               animation: _animation,
+//               builder: (context, child) {
+//                 double scale = 1.0 + (_animation.value * 0.5);
+//                 return Transform.scale(
+//                   scale: scale,
+//                   child: child,
+//                 );
+//               },
+//               child: Container(),
+//             ),
+//             Stack(
+//               children: _explosionParticles,
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
